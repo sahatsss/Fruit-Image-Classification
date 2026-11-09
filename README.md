@@ -1,104 +1,43 @@
+# Fruit Image Classification
 
-# Fruit Image Classifier Project
+Klasifikasi gambar 10 jenis buah dengan transfer learning di TensorFlow. Model diekspor ke format SavedModel, TFLite, dan TensorFlow.js.
 
-Proyek ini bertujuan membangun model klasifikasi gambar buah menggunakan TensorFlow dan transfer learning. Model telah dilatih untuk mengenali 10 jenis buah:
+Kelas: apple, avocado, banana, cherry, kiwi, mango, orange, pineapple, strawberries, watermelon.
 
-- Apple
-- Orange
-- Avocado
-- Kiwi
-- Mango
-- Pineapple
-- Strawberries
-- Banana
-- Cherry
-- Watermelon
-
----
-
-## Struktur Direktori
+## Model
 
 ```
-submission/
-├── tfjs_model/
-│   ├── group1-shard1of22.bin
-|   |── group1-shard2of22.bin
-|   |── group1-shard3of22.bin
-|   |── group1-shard4of22.bin
-|   |── group1-shard5of22.bin
-|   |── group1-shard6of22.bin
-|   |── group1-shard7of22.bin
-|   |── group1-shard8of22.bin
-|   |── group1-shard9of22.bin
-|   |── group1-shard10of22.bin
-|   |── group1-shard11of22.bin
-|   |── group1-shard12of22.bin
-|   |── group1-shard13of22.bin
-|   |── group1-shard14of22.bin
-|   |── group1-shard15of22.bin
-|   |── group1-shard16of22.bin
-|   |── group1-shard17of22.bin
-|   |── group1-shard18of22.bin
-|   |── group1-shard19of22.bin
-|   |── group1-shard20of22.bin
-|   |── group1-shard21of22.bin
-|   |── group1-shard22of22.bin
-│   └── model.json
-├── tflite/
-│   ├── model.tflite
-│   └── label.txt
-├── saved_model/
-│   ├── saved_model.pb
-│   └── variables/
-│       ├── variables.data-00000-of-00001
-│       └── variables.index
-├── notebook.ipynb
-├── README.md
-└── requirements.txt
+Pretrained backbone (EfficientNetB0 / InceptionV3)
+→ GlobalAveragePooling2D
+→ Dense(256, ReLU)
+→ Dropout(0.5)
+→ Dense(10, Softmax)
 ```
 
----
+Data training diaugmentasi dengan `ImageDataGenerator`.
 
-## Setup environment
+## Hasil
 
-1. **Aktifkan environment:**
-   ```bash
-   python -m venv env
-   env\Scripts\activate  
-   pip install -r requirements.txt
-   ```
+| Metrik | Nilai |
+|---|---|
+| Validation accuracy (terbaik) | 0.886 |
+| Test accuracy | 0.860 |
 
-2. **Jalankan notebook:**
-   - File `notebook.ipynb` yang berisi seluruh proses:
-     - Pemrosesan data
-     - Pelatihan model
-     - Evaluasi
+## Ekspor
 
----
+| Format | Kegunaan |
+|---|---|
+| SavedModel | Serving di server (TensorFlow Serving) |
+| TFLite | Aplikasi mobile dan edge device |
+| TensorFlow.js | Inference di browser |
 
-## Arsitektur Model
+File model tidak disimpan di repository karena ukurannya besar. Jalankan notebook untuk menghasilkan ketiga format tersebut.
 
-Model menggunakan transfer learning:
-- Backbone: EfficientNetB0 / InceptionV3 (pretrained)
-- GlobalAveragePooling2D
-- Dense(256) + ReLU
-- Dropout(0.5)
-- Dense(10) + Softmax
+## Menjalankan
 
----
-
-## Ekspor Model
-
-| Format        | Lokasi                   
-|---------------|---------------------------|
-| SavedModel    | `submission/saved_model/` | 
-| TFLite        | `submission/tflite/`      | 
-| TensorFlow.js | `submission/tfjs_model/`  | 
-
----
-
-## Dependencies
-
-Lihat `requirements.txt` untuk daftar library yang digunakan.
-
----
+```bash
+python -m venv env
+source env/bin/activate      # Windows: env\Scripts\activate
+pip install -r requirements.txt
+jupyter notebook notebook.ipynb
+```
